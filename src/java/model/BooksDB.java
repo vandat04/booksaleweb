@@ -230,32 +230,27 @@ public class BooksDB implements DatabaseInfo {
     public static List<Books> searchBooks(String title, String genre, Integer year) {
         List<Books> booksList = new ArrayList<>();
         try (Connection con = getConnect()) {
-            StringBuilder sql = new StringBuilder("SELECT * FROM Books WHERE 1=0"); // Bắt đầu với 1=0 để OR hoạt động
+            StringBuilder sql = new StringBuilder("SELECT * FROM Books WHERE 1=1");
 
             // Danh sách tham số động
             List<Object> params = new ArrayList<>();
 
-            if (title != null && !title.trim().isEmpty()) {
-                sql.append(" OR LOWER(Title) LIKE ?");
-                params.add("%" + title.trim().toLowerCase() + "%");
+            if (title != null && !title.isEmpty()) {
+                sql.append(" AND Title LIKE ?");
+                params.add("%" + title + "%");
             }
-            if (genre != null && !genre.trim().isEmpty()) {
-                sql.append(" OR LOWER(Genre) LIKE ?");
-                params.add("%" + genre.trim().toLowerCase() + "%");
+            if (genre != null && !genre.isEmpty()) {
+                sql.append(" AND Genre LIKE ?");
+                params.add("%" + genre + "%");
             }
-            if (year != null && year > 0) {
-                sql.append(" OR PublishedYear = ?");
+            if (year != null) {
+                sql.append(" AND PublishedYear = ?");
                 params.add(year);
-            }
-
-            // Kiểm tra nếu không có tham số nào hợp lệ thì không cần chạy query
-            if (params.isEmpty()) {
-                return booksList;
             }
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
-            // Gán giá trị tham số vào câu lệnh SQL
+            // Gán giá trị tham số động vào câu lệnh SQL
             for (int i = 0; i < params.size(); i++) {
                 if (params.get(i) instanceof Integer) {
                     stmt.setInt(i + 1, (Integer) params.get(i));
@@ -291,6 +286,6 @@ public class BooksDB implements DatabaseInfo {
     }
 
     public static void main(String[] args) {
-        System.out.println(searchBooks("Code", "", 1999));
+        System.out.println(searchBooks("Computer", "", 2008));
     }
 }

@@ -41,20 +41,14 @@
             <% } %>
 
             <% if (QRCode == null) {%>
-            <form action="DepositServlet" method="POST">
-                <input type="hidden" name="getQR" value="getQRCode">
+            <form action="ajaxServlet" method="POST">
                 <input type="hidden" name="userID" value="<%= profile.getUserID()%>">
-
                 <div class="mb-3">
                     <label for="bank" class="form-label">Bank:</label>
                     <select id="bank" name="bank" class="form-select" required>
-                        <option value="VCBank">VCBank</option>
-                        <option value="MBBank">MBBank</option>
-                        <option value="TPBank">TPBank</option>
-                        <option value="VTBank">VTBank</option>
+                        <option value="VCBank">VNPay</option>      
                     </select>
                 </div>
-
                 <div class="mb-3">
                     <label for="value" class="form-label">Value:</label>
                     <select id="value" name="value" class="form-select" required>
