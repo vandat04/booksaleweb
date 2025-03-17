@@ -13,7 +13,10 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <div class="container mt-5">
     <h2 class="mb-4">
-        <a href="index.jsp" class="btn btn-outline-secondary">Back</a> User Profile
+        <a href="index.jsp" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </a>
+        All Sales
     </h2>
 
     <% 
@@ -27,7 +30,6 @@
         return; // Dừng chương trình để tránh thực thi tiếp
     } else { 
     %>
-        <h3 class="mt-5">All Sales</h3>
         <table class="table table-bordered">
             <thead>
                 <tr>

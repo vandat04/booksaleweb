@@ -12,7 +12,12 @@
 <!DOCTYPE html>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <div class="container mt-5">
-    <h2 class="mb-4">  <a href="index.jsp" class="btn btn-outline-secondary">Back</a> User Profile</h2>
+    <h2 class="mb-4">
+        <a href="index.jsp" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </a>
+        User Profile
+    </h2>
     <% Users profile = (Users) request.getSession().getAttribute("user");
                 if (profile == null) { %>
     <p class="text-danger">User profile not found.</p>

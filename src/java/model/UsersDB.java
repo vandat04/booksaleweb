@@ -184,8 +184,61 @@ public class UsersDB implements DatabaseInfo {
         return 0;
     }
 
+    public static boolean deductBalance(int userID, double amount) {
+        String checkBalanceQuery = "SELECT Money FROM Users WHERE UserID = ?";
+        String updateBalanceQuery = "UPDATE Users SET Money = Money - ? WHERE UserID = ?";
+
+        try (Connection conn = getConnect();
+             PreparedStatement checkStmt = conn.prepareStatement(checkBalanceQuery);
+             PreparedStatement updateStmt = conn.prepareStatement(updateBalanceQuery)) {
+
+            conn.setAutoCommit(false); // Bắt đầu transaction
+
+            // 1. Kiểm tra số dư
+            checkStmt.setInt(1, userID);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (rs.next() && rs.getDouble("Money") >= amount) {
+                // 2. Trừ tiền
+                updateStmt.setDouble(1, amount);
+                updateStmt.setInt(2, userID);
+                if (updateStmt.executeUpdate() > 0) {
+                    conn.commit();
+                    return true;
+                }
+            }
+            conn.rollback();
+        } catch (SQLException e) {
+            Logger.getLogger(UsersDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+    
+    public static boolean refundBalance(int userID, double amount) {
+    String updateBalanceQuery = "UPDATE Users SET Money = Money + ? WHERE UserID = ?";
+
+    try (Connection conn = getConnect();
+         PreparedStatement updateStmt = conn.prepareStatement(updateBalanceQuery)) {
+
+        conn.setAutoCommit(false); // Bắt đầu transaction
+
+        // 1. Cộng tiền vào tài khoản
+        updateStmt.setDouble(1, amount);
+        updateStmt.setInt(2, userID);
+
+        if (updateStmt.executeUpdate() > 0) {
+            conn.commit(); // Xác nhận giao dịch
+            return true;
+        }
+        conn.rollback(); // Nếu thất bại, quay lui giao dịch
+    } catch (SQLException e) {
+        Logger.getLogger(UsersDB.class.getName()).log(Level.SEVERE, null, e);
+    }
+    return false;
+}
+    
     public static void main(String[] args) {
-        System.out.println(getUserByID(2).isAdmin());
+        System.out.println(refundBalance(5, 1000000));
     }
 
 }

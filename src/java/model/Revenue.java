@@ -9,7 +9,6 @@ import java.util.Date;
  * @author ACER
  */
 public class Revenue {
-    private int revenueID;
     private Date revenueDate;
     private int totalSales;
     private double totalRevenue;
@@ -17,19 +16,10 @@ public class Revenue {
     public Revenue() {
     }
 
-    public Revenue(int revenueID, Date revenueDate, int totalSales, double totalRevenue) {
-        this.revenueID = revenueID;
+    public Revenue( Date revenueDate, int totalSales, double totalRevenue) {
         this.revenueDate = revenueDate;
         this.totalSales = totalSales;
         this.totalRevenue = totalRevenue;
-    }
-
-    public int getRevenueID() {
-        return revenueID;
-    }
-
-    public void setRevenueID(int revenueID) {
-        this.revenueID = revenueID;
     }
 
     public Date getRevenueDate() {
@@ -59,7 +49,6 @@ public class Revenue {
     @Override
     public String toString() {
         return "Revenue{" +
-                "revenueID=" + revenueID +
                 ", revenueDate=" + revenueDate +
                 ", totalSales=" + totalSales +
                 ", totalRevenue=" + totalRevenue +

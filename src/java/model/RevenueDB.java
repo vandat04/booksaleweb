@@ -30,17 +30,16 @@ public class RevenueDB implements DatabaseInfo {
         }
         return null;
     }
-    
-    public static Revenue getRevenue(int id) {
+
+    public static Revenue getRevenue(Date revenueDate) {
         try (Connection con = getConnect()) {
-            PreparedStatement stmt = con.prepareStatement("SELECT RevenueDate, TotalSales, TotalRevenue FROM Revenue WHERE RevenueID=?");
-            stmt.setInt(1, id);
+            PreparedStatement stmt = con.prepareStatement("SELECT TotalSales, TotalRevenue FROM Revenue WHERE RevenueDate=?");
+            stmt.setDate(1, revenueDate);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                Date revenueDate = rs.getDate(1);
-                int totalSales = rs.getInt(2);
-                double totalRevenue = rs.getDouble(3);
-                return new Revenue(id, revenueDate, totalSales, totalRevenue);
+                int totalSales = rs.getInt(1);
+                double totalRevenue = rs.getDouble(2);
+                return new Revenue(revenueDate, totalSales, totalRevenue);
             }
             con.close();
         } catch (Exception ex) {
@@ -52,14 +51,13 @@ public class RevenueDB implements DatabaseInfo {
     public static ArrayList<Revenue> listAll() {
         ArrayList<Revenue> list = new ArrayList<>();
         try (Connection con = getConnect()) {
-            PreparedStatement stmt = con.prepareStatement("SELECT RevenueID, RevenueDate, TotalSales, TotalRevenue FROM Revenue");
+            PreparedStatement stmt = con.prepareStatement("SELECT RevenueDate, TotalSales, TotalRevenue FROM Revenue");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 list.add(new Revenue(
-                    rs.getInt(1), 
-                    rs.getDate(2), 
-                    rs.getInt(3), 
-                    rs.getDouble(4)));
+                        rs.getDate(1),
+                        rs.getInt(2),
+                        rs.getDouble(3)));
             }
             con.close();
             return list;
@@ -68,9 +66,73 @@ public class RevenueDB implements DatabaseInfo {
         }
         return null;
     }
-    
+
+    public static boolean increaseRevenue(Date revenueDate, int salesIncrease, double revenueIncrease) {
+        try (Connection con = getConnect()) {
+            // Kiểm tra xem ngày này đã có trong bảng chưa
+            PreparedStatement checkStmt = con.prepareStatement("SELECT TotalSales, TotalRevenue FROM Revenue WHERE RevenueDate = ?");
+            checkStmt.setDate(1, revenueDate);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (rs.next()) {
+                // Ngày đã tồn tại -> Cập nhật giá trị mới
+                int updatedSales = rs.getInt("TotalSales") + salesIncrease;
+                double updatedRevenue = rs.getDouble("TotalRevenue") + revenueIncrease;
+
+                PreparedStatement updateStmt = con.prepareStatement("UPDATE Revenue SET TotalSales = ?, TotalRevenue = ? WHERE RevenueDate = ?");
+                updateStmt.setInt(1, updatedSales);
+                updateStmt.setDouble(2, updatedRevenue);
+                updateStmt.setDate(3, revenueDate);
+
+                int rows = updateStmt.executeUpdate();
+                return rows > 0;
+            } else {
+                // Ngày chưa tồn tại -> Thêm mới
+                PreparedStatement insertStmt = con.prepareStatement("INSERT INTO Revenue (RevenueDate, TotalSales, TotalRevenue) VALUES (?, ?, ?)");
+                insertStmt.setDate(1, revenueDate);
+                insertStmt.setInt(2, salesIncrease);
+                insertStmt.setDouble(3, revenueIncrease);
+
+                int rows = insertStmt.executeUpdate();
+                return rows > 0;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(RevenueDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public static boolean decreaseRevenue(Date revenueDate, int salesDecrease, double revenueDecrease) {
+        try (Connection con = getConnect()) {
+            // Kiểm tra xem ngày này có tồn tại không
+            PreparedStatement checkStmt = con.prepareStatement("SELECT TotalSales, TotalRevenue FROM Revenue WHERE RevenueDate = ?");
+            checkStmt.setDate(1, revenueDate);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (rs.next()) {
+                // Lấy giá trị hiện tại
+                int currentSales = rs.getInt("TotalSales");
+                double currentRevenue = rs.getDouble("TotalRevenue");
+
+                // Tính giá trị mới (đảm bảo không âm)
+                int updatedSales = Math.max(0, currentSales - salesDecrease);
+                double updatedRevenue = Math.max(0, currentRevenue - revenueDecrease);
+
+                PreparedStatement updateStmt = con.prepareStatement("UPDATE Revenue SET TotalSales = ?, TotalRevenue = ? WHERE RevenueDate = ?");
+                updateStmt.setInt(1, updatedSales);
+                updateStmt.setDouble(2, updatedRevenue);
+                updateStmt.setDate(3, revenueDate);
+
+                int rows = updateStmt.executeUpdate();
+                return rows > 0;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(RevenueDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public static void main(String[] args) throws SQLException {
-        System.out.println(RevenueDB.getRevenue(1));  
+        decreaseRevenue(Date.valueOf("2000-11-11"), 1, 10);
     }
 }
-

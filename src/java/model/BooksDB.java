@@ -59,8 +59,8 @@ public class BooksDB implements DatabaseInfo {
         }
         return null;
     }
-    
-    public static Books getBookByID (int bookID) {
+
+    public static Books getBookByID(int bookID) {
         try (Connection con = getConnect()) {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM Books WHERE BookID = ?");
             stmt.setInt(1, bookID);
@@ -162,7 +162,135 @@ public class BooksDB implements DatabaseInfo {
         return false;
     }
 
+    public static boolean updateBook(Books book) {
+        try (Connection con = getConnect()) {
+            String sql = "UPDATE Books SET Title=?, Author=?, Genre=?, PublishedYear=?, Publisher=?, Description=?, TotalCopies=?, AvailableCopies=?, Price=?, ImagePath=?, PageCount=?, Language=? WHERE BookID=?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+
+            stmt.setString(1, book.getTitle());
+            stmt.setString(2, book.getAuthor());
+            stmt.setString(3, book.getGenre());
+            stmt.setInt(4, book.getPublishedYear());
+            stmt.setString(5, book.getPublisher());
+            stmt.setString(6, book.getDescription());
+            stmt.setInt(7, book.getTotalCopies());
+            stmt.setInt(8, book.getAvailableCopies());
+            stmt.setDouble(9, book.getPrice());
+            stmt.setString(10, book.getImagePath());
+            stmt.setInt(11, book.getPageCount());
+            stmt.setString(12, book.getLanguage());
+            stmt.setInt(13, book.getBookID());
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(BooksDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public static boolean deleteBook(int bookID) {
+        try (Connection con = getConnect()) {
+            String sql = "DELETE FROM Books WHERE BookID=?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+
+            stmt.setInt(1, bookID);
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(BooksDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public static boolean addBook(Books book) {
+        try (Connection con = getConnect()) {
+            String sql = "INSERT INTO Books (Title, Author, Genre, PublishedYear, Publisher, Description, TotalCopies, AvailableCopies, Price, ImagePath, PageCount, Language) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+
+            stmt.setString(1, book.getTitle());
+            stmt.setString(2, book.getAuthor());
+            stmt.setString(3, book.getGenre());
+            stmt.setInt(4, book.getPublishedYear());
+            stmt.setString(5, book.getPublisher());
+            stmt.setString(6, book.getDescription());
+            stmt.setInt(7, book.getTotalCopies());
+            stmt.setInt(8, book.getAvailableCopies());
+            stmt.setDouble(9, book.getPrice());
+            stmt.setString(10, book.getImagePath());
+            stmt.setInt(11, book.getPageCount());
+            stmt.setString(12, book.getLanguage());
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(BooksDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public static List<Books> searchBooks(String title, String genre, Integer year) {
+        List<Books> booksList = new ArrayList<>();
+        try (Connection con = getConnect()) {
+            StringBuilder sql = new StringBuilder("SELECT * FROM Books WHERE 1=0"); // Bắt đầu với 1=0 để OR hoạt động
+
+            // Danh sách tham số động
+            List<Object> params = new ArrayList<>();
+
+            if (title != null && !title.trim().isEmpty()) {
+                sql.append(" OR LOWER(Title) LIKE ?");
+                params.add("%" + title.trim().toLowerCase() + "%");
+            }
+            if (genre != null && !genre.trim().isEmpty()) {
+                sql.append(" OR LOWER(Genre) LIKE ?");
+                params.add("%" + genre.trim().toLowerCase() + "%");
+            }
+            if (year != null && year > 0) {
+                sql.append(" OR PublishedYear = ?");
+                params.add(year);
+            }
+
+            // Kiểm tra nếu không có tham số nào hợp lệ thì không cần chạy query
+            if (params.isEmpty()) {
+                return booksList;
+            }
+
+            PreparedStatement stmt = con.prepareStatement(sql.toString());
+
+            // Gán giá trị tham số vào câu lệnh SQL
+            for (int i = 0; i < params.size(); i++) {
+                if (params.get(i) instanceof Integer) {
+                    stmt.setInt(i + 1, (Integer) params.get(i));
+                } else {
+                    stmt.setString(i + 1, (String) params.get(i));
+                }
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Books book = new Books(
+                        rs.getInt("BookID"),
+                        rs.getString("Title"),
+                        rs.getString("Author"),
+                        rs.getString("Genre"),
+                        rs.getInt("PublishedYear"),
+                        rs.getString("Publisher"),
+                        rs.getString("Description"),
+                        rs.getInt("TotalCopies"),
+                        rs.getInt("AvailableCopies"),
+                        rs.getDouble("Price"),
+                        rs.getString("ImagePath"),
+                        rs.getInt("PageCount"),
+                        rs.getString("Language"),
+                        rs.getDate("AddedDate")
+                );
+                booksList.add(book);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BooksDB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return booksList;
+    }
+
     public static void main(String[] args) {
-        System.out.println(getBookByID(1));
+        System.out.println(searchBooks("Code", "", 1999));
     }
 }

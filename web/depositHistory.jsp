@@ -25,7 +25,12 @@
             Users user = (Users) session.getAttribute("user");
         %>
 
-        <h3 class="mb-4">Deposit History</h3>
+        <h2 class="mb-4">
+            <a href="index.jsp" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+            Deposit History
+        </h2>
 
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
@@ -65,8 +70,7 @@
                     }
                 %>
             </tbody>
-        </table>
-        <a href="index.jsp" class="btn btn-primary">Back</a>   
+        </table> 
         <!-- Bootstrap JS (Optional, chỉ cần nếu dùng JavaScript của Bootstrap) -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>

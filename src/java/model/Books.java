@@ -52,6 +52,23 @@ public class Books {
         this.addedDate = new Date();
     }
 
+    public Books(String title, String author, String genre, int publishedYear, String publisher, String description, int totalCopies, int availableCopies, double price, String imagePath, int pageCount, String language) {
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+        this.publishedYear = publishedYear;
+        this.publisher = publisher;
+        this.description = description;
+        this.totalCopies = totalCopies;
+        this.availableCopies = availableCopies;
+        this.price = price;
+        this.imagePath = imagePath;
+        this.pageCount = pageCount;
+        this.language = language;
+    }
+
+    
+    
     public Books(int bookID, String title, String author, String genre, int publishedYear, String publisher, String description, int totalCopies, int availableCopies, double price, String imagePath, int pageCount, String language, Date addedDate) {
         this.bookID = bookID;
         this.title = title;

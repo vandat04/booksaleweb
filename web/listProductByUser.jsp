@@ -56,5 +56,8 @@
         </c:otherwise>
     </c:choose>
 </div>
-<%} %>
+<%} else {
+        request.getRequestDispatcher("listProductByAdmin.jsp").forward(request, response);
+    }
+%>
 

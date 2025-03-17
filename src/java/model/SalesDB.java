@@ -166,14 +166,23 @@ public class SalesDB implements DatabaseInfo {
         return false;
     }
 
-    public static void main(String[] args) {
-        
-        addSale(2, 2, 4, 123);
-        
-        for (Sales x : listAllSales()) {
-            System.out.println(x);
+    public static boolean updateSaleStatus(int saleID, String newStatus) {
+        String query = "UPDATE Sales SET Status = ? WHERE SaleID = ?";
+        try (Connection con = getConnect(); PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setString(1, newStatus);
+            ps.setInt(2, saleID);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        
-        
+        return false;
+    }
+
+    public static void main(String[] args) {
+
+        System.out.println(updateSaleStatus(12, "Completed"));
+
     }
 }
