@@ -229,34 +229,52 @@ public class BooksDB implements DatabaseInfo {
 
     public static List<Books> searchBooks(String title, String genre, Integer year) {
         List<Books> booksList = new ArrayList<>();
+
         try (Connection con = getConnect()) {
-            StringBuilder sql = new StringBuilder("SELECT * FROM Books WHERE 1=1");
+            StringBuilder sql = new StringBuilder("SELECT * FROM Books WHERE");
 
             // Danh sách tham số động
             List<Object> params = new ArrayList<>();
+            boolean conditionAdded = false;
 
             if (title != null && !title.isEmpty()) {
-                sql.append(" AND Title LIKE ?");
+                sql.append(" Title LIKE ?");
                 params.add("%" + title + "%");
+                conditionAdded = true;
             }
+
             if (genre != null && !genre.isEmpty()) {
-                sql.append(" AND Genre LIKE ?");
+                if (conditionAdded) {
+                    sql.append(" OR");
+                }
+                sql.append(" Genre LIKE ?");
                 params.add("%" + genre + "%");
+                conditionAdded = true;
             }
-            if (year != null) {
-                sql.append(" AND PublishedYear = ?");
+
+            if (year != null && year > 0) {
+                if (conditionAdded) {
+                    sql.append(" OR");
+                }
+                sql.append(" PublishedYear = ?");
                 params.add(year);
             }
+
+            // In ra câu SQL và tham số để debug
+            System.out.println("SQL Query: " + sql.toString());
+            System.out.println("Params: " + params);
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
             // Gán giá trị tham số động vào câu lệnh SQL
-            for (int i = 0; i < params.size(); i++) {
-                if (params.get(i) instanceof Integer) {
-                    stmt.setInt(i + 1, (Integer) params.get(i));
+            int paramIndex = 1;
+            for (Object param : params) {
+                if (param instanceof Integer) {
+                    stmt.setInt(paramIndex, (Integer) param);
                 } else {
-                    stmt.setString(i + 1, (String) params.get(i));
+                    stmt.setString(paramIndex, (String) param);
                 }
+                paramIndex++;
             }
 
             ResultSet rs = stmt.executeQuery();
@@ -280,12 +298,13 @@ public class BooksDB implements DatabaseInfo {
                 booksList.add(book);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(BooksDB.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BooksDB.class.getName()).log(Level.SEVERE, "Lỗi khi tìm kiếm sách!", ex);
         }
+
         return booksList;
     }
 
     public static void main(String[] args) {
-        System.out.println(searchBooks("Computer", "", 2008));
+        System.out.println(searchBooks("Clean", "", 1999));
     }
 }

@@ -104,7 +104,6 @@ public class ProfileEditByAdminServlet extends HttpServlet {
 
         ArrayList<Users> userList = (ArrayList<Users>) UsersDB.allListUsers();
         request.setAttribute("userList", userList); // Đặt vào request
-        request.getSession().removeAttribute("user");
         request.getSession().setAttribute("user", UsersDB.getUserByID(Integer.parseInt(adminID)));
         request.getRequestDispatcher("profile.jsp").forward(request, response);
     }

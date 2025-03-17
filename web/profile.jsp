@@ -59,8 +59,8 @@
 
                         <!-- Delete Button (Red) -->
                         <form action="ProfileEditByAdminServlet" method="post" style="white-space: nowrap;">
-                            <input type="hidden" name="adminID" value="<%= profile.getUserID()%>">
                             <input type="hidden" name="type" value="delete">
+                            <input type="hidden" name="adminID" value="<%= profile.getUserID()%>">
                             <input type="hidden" name="userID" value="<%= user.getUserID()%>">
                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>

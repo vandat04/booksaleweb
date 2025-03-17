@@ -10,7 +10,6 @@ package model;
 import java.util.Date;
 
 public class Feedbacks {
-    private int feedbackID;
     private int userID;
     private int bookID;
     private int rating;
@@ -18,8 +17,7 @@ public class Feedbacks {
     private Date feedbackDate;
 
     // Constructor
-    public Feedbacks(int feedbackID, int userID, int bookID,  int rating, String comment, Date feedbackDate) {
-        this.feedbackID = feedbackID;
+    public Feedbacks( int userID, int bookID,  int rating, String comment, Date feedbackDate) {
         this.userID = userID;
         this.bookID = bookID;
         this.rating = rating;
@@ -31,15 +29,6 @@ public class Feedbacks {
         this.bookID = bookID;
         this.rating = rating;
         this.comment = comment;
-    }
-
-    // Getters and Setters
-    public int getFeedbackID() {
-        return feedbackID;
-    }
-
-    public void setFeedbackID(int feedbackID) {
-        this.feedbackID = feedbackID;
     }
 
     public int getUserID() {
@@ -85,7 +74,6 @@ public class Feedbacks {
     @Override
     public String toString() {
         return "Feedbacks{" +
-                "feedbackID=" + feedbackID +
                 ", userID=" + userID +
                 ", bookID=" + bookID +
                 ", rating=" + rating +

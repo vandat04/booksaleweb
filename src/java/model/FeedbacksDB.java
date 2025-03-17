@@ -58,7 +58,6 @@ public class FeedbacksDB implements DatabaseInfo {
 
             while (rs.next()) {
                 Feedbacks feedback = new Feedbacks(
-                    rs.getInt("FeedbackID"),
                     rs.getInt("UserID"),
                     rs.getInt("BookID"),
                     rs.getInt("Rating"),
