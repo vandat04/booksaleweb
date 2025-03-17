@@ -68,7 +68,7 @@
             </form>
             <!-- Thêm phần "Chưa có tài khoản?" -->
             <div class="text-center mt-3">
-                <p>Chưa có tài khoản? <a href="register.jsp" class="btn btn-link">Sing up</a></p>
+                <p>Chưa có tài khoản? <a href="register.jsp" class="btn btn-link">Sign   up</a></p>
             </div>
         </div>
 

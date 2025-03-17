@@ -4,6 +4,8 @@
     Author     : ACER
 --%>
 
+<%@page import="model.Users"%>
+<%@page import="org.apache.catalina.User"%>
 <%@page import="model.Books"%>
 <%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -14,7 +16,7 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 <div class="container mt-4">
-    
+    <% Users userForSearch = (Users) session.getAttribute("user");%>
     <h2 class="mb-4">
         <a href="index.jsp" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left"></i> Back
@@ -53,7 +55,7 @@
                     <c:forEach var="book" items="${books}">
                         <div class="col">
                             <div class="card h-100 shadow-sm">
-                                <img src="<%=request.getContextPath()%>/images/QR1.png" alt="${book.title}" class="card-img-top img-fluid p-2"/>
+                                <img src="<%=request.getContextPath()%>${book.imagePath}" alt="${book.title}" class="card-img-top img-fluid p-2"/>
                                 <div class="card-body text-center">
                                     <h5 class="card-title fw-bold">${book.title}</h5>
                                     <p class="card-text"><strong>Genre:</strong> ${book.genre}</p>
@@ -63,6 +65,7 @@
                                 <div class="card-footer text-center bg-white">
                                     <form action="GetDetailsServlet" method="POST">
                                         <input type="hidden" name="bookID" value="${book.bookID}">
+                                        <input type="hidden" name="userID" value="${userForSearch.userID}">
                                         <button type="submit" class="btn btn-outline-primary w-100">View Details</button>
                                     </form>
                                 </div>

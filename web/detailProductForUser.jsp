@@ -111,7 +111,7 @@
     <a href="index.jsp" class="btn btn-secondary back-btn">Back to Home</a>
     <div class="row book-detail">
         <div class="col-md-4 image-section">
-            <img src="<%=request.getContextPath()%>/images/QR1.png" alt="${bookDetails.title}" class="book-image">
+            <img src="<%=request.getContextPath()%>${bookDetails.imagePath}" alt="${bookDetails.title}" class="book-image">
         </div>
         <div class="col-md-8 info-section">
             <h1>${bookDetails.title}</h1>

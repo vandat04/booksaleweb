@@ -29,7 +29,7 @@
                     <div class="col-md-4 mb-4">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
-                                <img src="<%=request.getContextPath()%>/images/QR1.png" alt="${book.title}" class="img-fluid"/>
+                                <img src="<%=request.getContextPath()%>${book.imagePath}" alt="${book.title}" class="img-fluid"/>
                                 <h5 class="card-title">Title: ${book.title}</h5>
                                 <p class="card-text">Genre: ${book.genre}</p>
                                 <p class="card-text">Price: ${book.price}</p>
