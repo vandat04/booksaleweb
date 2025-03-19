@@ -61,17 +61,15 @@ public class DepositVNPayServlet extends HttpServlet {
             throws ServletException, IOException {
         double depositValue = Double.parseDouble(request.getParameter("vnp_Amount")) / 100;
 
-        // 2. Lấy userID từ vnp_TxnRef
+        // 1. Lấy userID từ vnp_TxnRef
         String txnRef = request.getParameter("vnp_TxnRef");
         String userID = (txnRef != null && txnRef.contains("&&")) ? txnRef.split("&&")[0] : txnRef;
-
-        // 3. Lấy mã ngân hàng từ vnp_BankCode
+        // 2. Lấy mã ngân hàng từ vnp_BankCode
         String bank = request.getParameter("vnp_BankCode");
-
-        // 4. Lấy trạng thái giao dịch
+        // 3. Lấy trạng thái giao dịch
         String transactionStatus = request.getParameter("vnp_TransactionStatus");
 
-        // 5. Kiểm tra nếu giao dịch thành công (vnp_TransactionStatus = "00")
+        // 4. Kiểm tra nếu giao dịch thành công (vnp_TransactionStatus = "00")
         if ("00".equals(transactionStatus)) {
             try {
                 // Cập nhật lịch sử nạp tiền
@@ -83,13 +81,13 @@ public class DepositVNPayServlet extends HttpServlet {
                 request.setAttribute("error", "Lỗi cập nhật số dư. Vui lòng thử lại!");
             }
             request.getSession().setAttribute("user", UsersDB.getUserByID(Integer.parseInt(userID)));
+            request.setAttribute("success", "Giao dịch thành công!");
             request.getRequestDispatcher("deposit.jsp").forward(request, response);
 
         } else {
             // Giao dịch thất bại, hiển thị thông báo lỗi
             request.setAttribute("error", "Giao dịch không thành công. Vui lòng thử lại!");
             request.getRequestDispatcher("deposit.jsp").forward(request, response);
-            System.out.println("Invalid transaction status");
         }
     }
 

@@ -10,10 +10,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Register JSP Page</title>
-
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+        
         <style>
             body {
                 background-color: #f8f9fa;
@@ -27,6 +24,7 @@
                 box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             }
         </style>
+        
     </head>
     <body class="d-flex align-items-center justify-content-center">
         <%
@@ -99,3 +97,5 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
+
+       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

@@ -86,10 +86,6 @@ public class SubmitFeedbackServlet extends HttpServlet {
         
         FeedbacksDB.addFeedback(Integer.parseInt(userID), Integer.parseInt(bookID), Integer.parseInt(rating), comment);
         
-        request.getSession().removeAttribute("user");
-        request.getSession().removeAttribute("bookDetailForUser");
-        request.getSession().removeAttribute("feedback");
-        
         Users user = UsersDB.getUserByID(Integer.parseInt(userID));
         Books book = BooksDB.getBookByID(Integer.parseInt(bookID));
         ArrayList<Feedbacks> feedback = (ArrayList) FeedbacksDB.getFeedbacksByBookID(Integer.parseInt(bookID));

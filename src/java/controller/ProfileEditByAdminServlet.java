@@ -77,7 +77,6 @@ public class ProfileEditByAdminServlet extends HttpServlet {
         String type = request.getParameter("type");
         String adminID = request.getParameter("adminID");
         String userID = request.getParameter("userID");
-        String username = request.getParameter("username");
         String password = request.getParameter("password");
         String fullName = request.getParameter("fullName");
         String email = request.getParameter("email");
@@ -90,16 +89,21 @@ public class ProfileEditByAdminServlet extends HttpServlet {
                 // Nếu đầu vào là yyyy-MM-dd (HTML <input type="date"> gửi đúng định dạng này)
                 dateOfBirth = java.sql.Date.valueOf(dateOfBirthStr);
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
             }
         }
         
-        if (type.equals("delete")) {
-            UsersDB.deleteUserByID(Integer.parseInt(userID));
-        } else if (type.equals("isadmin")) {
-            UsersDB.updateIsAdmin(Integer.parseInt(userID), Boolean.parseBoolean(request.getParameter("adminAccept")));
-        } else if (type.equals("edit")){
-            UsersDB.updateUser(Integer.parseInt(userID), password, fullName, email, phone, address, dateOfBirth);
+        switch (type) {
+            case "delete":
+                UsersDB.deleteUserByID(Integer.parseInt(userID));
+                break;
+            case "isadmin":
+                UsersDB.updateIsAdmin(Integer.parseInt(userID), Boolean.parseBoolean(request.getParameter("adminAccept")));
+                break;
+            case "edit":
+                UsersDB.updateUser(Integer.parseInt(userID), password, fullName, email, phone, address, dateOfBirth);
+                break;
+            default:
+                break;
         }
 
         ArrayList<Users> userList = (ArrayList<Users>) UsersDB.allListUsers();

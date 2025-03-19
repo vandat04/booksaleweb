@@ -12,19 +12,18 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Edit Profile</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     </head>
     <body>
         <div class="container mt-5">
             <h2 class="mb-4">  <a href="index.jsp" class="btn btn-outline-secondary">Back</a> User Profile</h2>
 
-            <% Users profiles = UsersDB.getUserByID(Integer.parseInt(request.getParameter("userID")));    
+            <% Users profiles = UsersDB.getUserByID(Integer.parseInt(request.getParameter("userID")));
                 if (profiles == null) { %>
             <p class="text-danger">User profile not found.</p>
-            <% } else { %>     
+            <% } else {%>     
             <!-- User profile form -->
             <form action="ProfileEditByAdminServlet" method="POST">
-                <input type="hidden" class="form-control" name="adminID" value="<%= request.getParameter("adminID") %>" readonly>
+                <input type="hidden" class="form-control" name="adminID" value="<%= request.getParameter("adminID")%>" readonly>
                 <input type="hidden" class="form-control" name="type" value="edit" readonly>
                 <div class="mb-3">
                     <label class="form-label"><strong>UserID:</strong></label>
@@ -76,3 +75,4 @@
     </body>
 </html>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">

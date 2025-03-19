@@ -32,24 +32,23 @@
             </tr>
         </thead>
         <tbody>
-            <%
-                ArrayList<Revenue> revenueList = (ArrayList) request.getAttribute("revenueList");
+            <%                ArrayList<Revenue> revenueList = (ArrayList) request.getAttribute("revenueList");
                 if (revenueList != null && !revenueList.isEmpty()) {
                     for (Revenue revenue : revenueList) {
             %>  
-                        <tr>
-                            <td><%= revenue.getRevenueDate() %></td>
-                            <td><span class="badge bg-primary fs-6"><%= revenue.getTotalSales() %></span></td>
-                            <td><span class="fw-bold text-success">$<%= revenue.getTotalRevenue() %></span></td>  
-                        </tr>
-            <% 
-                    }
-                } else { 
+            <tr>
+                <td><%= revenue.getRevenueDate()%></td>
+                <td><span class="badge bg-primary fs-6"><%= revenue.getTotalSales()%></span></td>
+                <td><span class="fw-bold text-success">$<%= revenue.getTotalRevenue()%></span></td>  
+            </tr>
+            <%
+                }
+            } else {
             %>
-                <tr>
-                    <td colspan="3" class="text-muted text-center">No revenue data available.</td>
-                </tr>
-            <% } %>
+            <tr>
+                <td colspan="3" class="text-muted text-center">No revenue data available.</td>
+            </tr>
+            <% }%>
         </tbody>
     </table>
 </div>

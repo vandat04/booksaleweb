@@ -14,8 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import model.Revenue;
 import model.RevenueDB;
-import model.Users;
-import model.UsersDB;
 
 /**
  *
@@ -78,22 +76,7 @@ public class RenvenueServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int bookID = Integer.parseInt(request.getParameter("bookID"));
-        String title = request.getParameter("title");
-        String author = request.getParameter("author");
-        String genre = request.getParameter("genre");
-        int publishedYear = Integer.parseInt(request.getParameter("publishedYear"));
-        String publisher = request.getParameter("publisher");
-        String description = request.getParameter("description");
-        int totalCopies = Integer.parseInt(request.getParameter("totalCopies"));
-        int availableCopies = Integer.parseInt(request.getParameter("availableCopies"));
-        double price = Double.parseDouble(request.getParameter("price"));
-        String imagePath = request.getParameter("imagePath");
-        int pageCount = Integer.parseInt(request.getParameter("pageCount"));
-        String language = request.getParameter("language");
-        String addedDate = request.getParameter("addedDate"); // Không chỉnh sửa, chỉ giữ nguyên
-        
-        
+        processRequest(request, response);
     }
 
     /**

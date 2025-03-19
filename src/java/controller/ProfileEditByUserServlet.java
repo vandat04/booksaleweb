@@ -92,10 +92,8 @@ public class ProfileEditByUserServlet extends HttpServlet {
             }
         }
         UsersDB.updateUser(Integer.parseInt(userID), password, fullName, email, phone, address, dateOfBirth);
-
-        request.getSession().removeAttribute("user");
-        request.getSession().setAttribute("user", UsersDB.getUserByID(Integer.parseInt(userID)));
         
+        request.getSession().setAttribute("user", UsersDB.getUserByID(Integer.parseInt(userID)));   
         request.getRequestDispatcher("editProfileByUser.jsp").forward(request, response);
     }
 

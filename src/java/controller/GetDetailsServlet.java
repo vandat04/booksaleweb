@@ -81,13 +81,13 @@ public class GetDetailsServlet extends HttpServlet {
         String userID = request.getParameter("userID");
         String bookID = request.getParameter("bookID");
         Users user =null;
-        if(userID != "" ){
+        try {
             user = UsersDB.getUserByID(Integer.parseInt(userID));
+        } catch (Exception e) {
         }
         Books book = BooksDB.getBookByID(Integer.parseInt(bookID));
         ArrayList<Feedbacks> feedback = (ArrayList)FeedbacksDB.getFeedbacksByBookID(Integer.parseInt(bookID));
         request.getSession().setAttribute("bookDetailForUser", book);
-        request.getSession().removeAttribute("user");
         request.getSession().setAttribute("user", user);
         request.getSession().setAttribute("feedback", feedback);
         

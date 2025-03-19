@@ -86,12 +86,10 @@ public class RegisterServlet extends HttpServlet {
                 // Nếu đầu vào là yyyy-MM-dd (HTML <input type="date"> gửi đúng định dạng này)
                 dateOfBirth = java.sql.Date.valueOf(dateOfBirthStr);
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
             }
         }
         // Thêm vào database
         boolean isRegistered = UsersDB.registerUser(username, password, fullName, email, phone, address, (java.sql.Date) dateOfBirth);
-
         if (isRegistered) { 
             // Chuyển hướng nếu thành công
             request.getRequestDispatcher("login.jsp?success=1").forward(request, response);

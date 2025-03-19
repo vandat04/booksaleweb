@@ -97,24 +97,17 @@ public class AddToCardServlet extends HttpServlet {
             request.getRequestDispatcher("detailProductForUser.jsp").forward(request, response);
             return;
         }
-   
-        Users user = UsersDB.getUserByID(Integer.parseInt(userID));
+        //Tính tiền sách
         Books book = BooksDB.getBookByID(Integer.parseInt(bookID));
-
         Double total = book.getPrice() * numberOfBooks;
-        
-        request.getSession().removeAttribute("user");
-        request.getSession().removeAttribute("bookDetailForUser");
-        request.getSession().removeAttribute("feedback");
-       
+        //Add vô giỏ hàng
         boolean newSale = SalesDB.addSale(Integer.parseInt(userID), Integer.parseInt(bookID), numberOfBooks, total);
-        
-        ArrayList<Feedbacks> feedback = (ArrayList) FeedbacksDB.getFeedbacksByBookID(Integer.parseInt(bookID));
-        
+        //Cập nhật lại thông tin sách để hiển thị thay đổi
+        Users user = UsersDB.getUserByID(Integer.parseInt(userID));
+        book = BooksDB.getBookByID(Integer.parseInt(bookID));
+        //Gửi thông tin qua cho jsp làm việc
         request.getSession().setAttribute("bookDetailForUser", book);
         request.getSession().setAttribute("user", user);
-        request.getSession().setAttribute("feedback", feedback);
-        
         if (!newSale) {
             request.setAttribute("err", "1");
         } else {

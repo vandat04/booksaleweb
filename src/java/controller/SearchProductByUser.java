@@ -14,6 +14,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import model.Books;
 import model.BooksDB;
+import model.Users;
+import model.UsersDB;
 
 /**
  *
@@ -74,11 +76,28 @@ public class SearchProductByUser extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // Lấy user từ session nếu đã có
+        Users user = (Users) request.getSession().getAttribute("user");
+
+        // Nếu chưa có user, lấy user từ request
+        String userID = request.getParameter("userID");
+        if (user == null && userID != null && !userID.isEmpty()) {
+            try {
+                user = UsersDB.getUserByID(Integer.parseInt(userID));
+                if (user != null) {
+                    request.getSession().setAttribute("user", user); // Lưu lại user vào session
+                }
+            } catch (NumberFormatException e) {
+                user = null;
+            }
+        }
+
+        // Lấy thông tin tìm kiếm từ request
         String title = request.getParameter("title");
         String genre = request.getParameter("genre");
         String yearStr = request.getParameter("year");
 
-        // Chuyển đổi năm xuất bản sang kiểu Integer
         Integer year = null;
         if (yearStr != null && !yearStr.trim().isEmpty()) {
             try {
@@ -88,12 +107,13 @@ public class SearchProductByUser extends HttpServlet {
             }
         }
 
-        // Gọi hàm searchBooks() từ BooksDB
+        // Gọi hàm tìm kiếm sách
         List<Books> books = BooksDB.searchBooks(title, genre, year);
 
-        // Gửi kết quả tìm kiếm về trang JSP
+        // Gửi dữ liệu về JSP
         request.setAttribute("books", books);
         request.getRequestDispatcher("searchByUser.jsp").forward(request, response);
+
     }
 
     /**

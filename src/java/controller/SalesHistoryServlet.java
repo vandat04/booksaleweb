@@ -14,8 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import model.Sales;
 import model.SalesDB;
-import model.Users;
-import model.UsersDB;
 
 /**
  *
